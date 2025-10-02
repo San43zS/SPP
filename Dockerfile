@@ -1,5 +1,5 @@
 # Используем официальный Node.js образ как базовый
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Устанавливаем зависимости
-RUN npm ci --only=production
+# Install all deps for build
+RUN npm ci
 
 # Копируем исходный код
 COPY . .
@@ -20,7 +21,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Копируем собранное приложение в nginx
-COPY --from=0 /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Копируем конфигурацию nginx (опционально)
 # COPY nginx.conf /etc/nginx/nginx.conf
