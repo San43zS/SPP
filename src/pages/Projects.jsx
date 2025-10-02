@@ -3,6 +3,7 @@ import Container from "../components/Container.jsx"
 import ProjectList from "../components/ProjectList.jsx"
 import Modal from "../components/Modal.jsx"
 import Input from "../components/Input.jsx"
+import Button from "../components/Button.jsx"
 
 export default function Projects({ 
   projects = [], 

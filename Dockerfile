@@ -1,34 +1,23 @@
-# Используем официальный Node.js образ как базовый
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
-# Устанавливаем рабочую директорию
+# Рабочая директория
 WORKDIR /app
 
 # Копируем package.json и package-lock.json (если есть)
 COPY package*.json ./
 
-# Устанавливаем зависимости
-# Install all deps for build
+# Установка зависимостей
 RUN npm ci
 
 # Копируем исходный код
 COPY . .
 
-# Собираем приложение для продакшена
+# Сборка приложения (Vite создаст dist/)
 RUN npm run build
 
-# Устанавливаем nginx для раздачи статических файлов
-FROM nginx:alpine
+# Открываем порт для vite preview (по умолчанию 4173, но используем 5173)
+EXPOSE 5173
 
-# Копируем собранное приложение в nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Копируем конфигурацию nginx (опционально)
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# Открываем порт 80
-EXPOSE 80
-
-# Запускаем nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Запуск предпросмотра продакшн-сборки
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "5173"]
 

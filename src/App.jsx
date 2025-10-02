@@ -8,7 +8,6 @@ import NavBar from "./components/NavBar.jsx"
 import Container from "./components/Container.jsx"
 import "./App.css"
 
-// Mock data для демонстрации
 const initialProjects = [
   {
     id: "1",
